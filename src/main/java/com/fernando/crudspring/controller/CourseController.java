@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fernando.crudspring.model.Course;
 import com.fernando.crudspring.repository.CourseRepository;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+@Validated
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {
@@ -34,18 +40,18 @@ public class CourseController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Course store(@RequestBody Course course) {
+	public Course store(@RequestBody @Valid Course course) {
 		return this.courseRepository.save(course);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Course> findById(@PathVariable Long id) {
+	public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id) {
 		return this.courseRepository.findById(id)
 								.map(course -> ResponseEntity.ok().body(course))
 								.orElse(ResponseEntity.notFound().build());
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<Course> patch(@PathVariable Long id, @RequestBody Course course) {
+	public ResponseEntity<Course> patch(@PathVariable @Positive Long id, @RequestBody @Valid Course course) {
 		return this.courseRepository.findById(id)
 									.map(courseDb -> {
 										courseDb.setName(course.getName());
@@ -56,7 +62,7 @@ public class CourseController {
 									.orElse(ResponseEntity.notFound().build());
 	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> destroy(@PathVariable Long id) {
+	public ResponseEntity<Void> destroy(@PathVariable @Positive Long id) {
 		return this.courseRepository.findById(id)
 										.map(course -> {
 											this.courseRepository.delete(course);
