@@ -3,7 +3,6 @@ package com.fernando.crudspring.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,23 +44,16 @@ public class CourseController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id) {
-		return this.courseService.findById(id)
-								.map(course -> ResponseEntity.ok().body(course))
-								.orElse(ResponseEntity.notFound().build());
+	public Course findById(@PathVariable @NotNull @Positive Long id) {
+		return this.courseService.findById(id);
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<Course> update(@PathVariable @Positive Long id, @RequestBody @Valid Course course) {
-		return this.courseService.update(id,course)
-									.map(recordFound -> {
-										return ResponseEntity.ok().body(recordFound);
-									})
-									.orElse(ResponseEntity.notFound().build());
+	public Course update(@PathVariable @Positive Long id, @RequestBody @Valid Course course) {
+		return this.courseService.update(id,course);
 	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> destroy(@PathVariable @Positive Long id) {
-		return this.courseService.destroy(id) 
-									? ResponseEntity.noContent().<Void>build()
-									: ResponseEntity.notFound().build();
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void destroy(@PathVariable @Positive Long id) {
+		this.courseService.destroy(id);
 	}
 }
