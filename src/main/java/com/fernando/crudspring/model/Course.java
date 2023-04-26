@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fernando.crudspring.enums.Category;
+import com.fernando.crudspring.enums.Status;
 import com.fernando.crudspring.enums.converters.CategoryConverter;
+import com.fernando.crudspring.enums.converters.StatusConverter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -16,13 +18,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
 @Entity
-@SQLDelete(sql = "update course set status = 'Inativo' where id = ?")
-@Where(clause = "status='Ativo'")
+@SQLDelete(sql = "update course set status = 'inativo' where id = ?")
+@Where(clause = "status='ativo'")
 public class Course {
 
 	@Id
@@ -42,8 +43,7 @@ public class Course {
 	private Category category;
 
 	@NotNull
-	@Pattern(regexp = "Ativo|Inativo")
-	@Length(max = 10)
+	@Convert(converter = StatusConverter.class)
 	@Column(length = 10, nullable = false)
-	private String status = "Ativo";
+	private Status status = Status.ATIVO;
 }

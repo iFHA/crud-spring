@@ -6,15 +6,20 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.fernando.crudspring.dto.CourseDTO;
+import com.fernando.crudspring.enums.converters.CategoryConverter;
 import com.fernando.crudspring.model.Course;
 
 @Component
 public class CourseMapper {
+	public CategoryConverter categoryConverter;
+	public CourseMapper(CategoryConverter categoryConverter) {
+		this.categoryConverter = categoryConverter;
+	}
 	public CourseDTO toDTO (Course course) {
 		if (course == null) {
 			return null;
 		}
-		return new CourseDTO(course.getId(), course.getName(), course.getCategory());
+		return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
 	}
 	public List<CourseDTO> toDTOList (List<Course> entitiesList) {
 		return entitiesList
@@ -31,7 +36,7 @@ public class CourseMapper {
 			course.setId(courseDTO.id());
 		}
 		course.setName(courseDTO.name());
-		course.setCategory(courseDTO.category());
+		course.setCategory(this.categoryConverter.convertToEntityAttribute(courseDTO.category()));
 		return course;
 	}
 	public List<Course> toEntityList (List<CourseDTO> DTOList) {
@@ -40,4 +45,5 @@ public class CourseMapper {
 					.map(this::toEntity)
 					.collect(Collectors.toList());
 	}
+
  }

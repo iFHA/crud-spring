@@ -2,12 +2,15 @@ package com.fernando.crudspring.enums.converters;
 
 import java.util.stream.Stream;
 
+import org.springframework.stereotype.Component;
+
 import com.fernando.crudspring.enums.Category;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
+@Component
 public class CategoryConverter implements AttributeConverter<Category, String> {
 
 	@Override

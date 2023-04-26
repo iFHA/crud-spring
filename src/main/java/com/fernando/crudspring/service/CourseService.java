@@ -44,7 +44,7 @@ public class CourseService {
 	public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO course) {
 		Course courseDb = this.courseMapper.toEntity(this.findById(id));
 		courseDb.setName(course.name());
-		courseDb.setCategory(course.category());
+		courseDb.setCategory(this.courseMapper.categoryConverter.convertToEntityAttribute(course.category()));
 		return this.courseMapper.toDTO(this.courseRepository.save(courseDb));
 	}
 
