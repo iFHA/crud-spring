@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fernando.crudspring.model.Course;
+import com.fernando.crudspring.dto.CourseDTO;
 import com.fernando.crudspring.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -33,22 +33,22 @@ public class CourseController {
 	}
 	
 	@GetMapping
-	public List<Course> list() {
+	public List<CourseDTO> list() {
 		return this.courseService.list();
 	}
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Course store(@RequestBody @Valid Course course) {
-		return this.courseService.store(course);
+	public CourseDTO store(@RequestBody @Valid @NotNull CourseDTO courseDTO) {
+		return this.courseService.store(courseDTO);
 	}
 
 	@GetMapping("/{id}")
-	public Course findById(@PathVariable @NotNull @Positive Long id) {
+	public CourseDTO findById(@PathVariable @NotNull @Positive Long id) {
 		return this.courseService.findById(id);
 	}
 	@PutMapping("/{id}")
-	public Course update(@PathVariable @Positive Long id, @RequestBody @Valid Course course) {
+	public CourseDTO update(@PathVariable @Positive Long id, @RequestBody @Valid @NotNull CourseDTO course) {
 		return this.courseService.update(id,course);
 	}
 	@DeleteMapping("/{id}")

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.fernando.crudspring.dto.CourseDTO;
+import com.fernando.crudspring.dto.mapper.CourseMapper;
 import com.fernando.crudspring.exception.RecordNotFoundException;
 import com.fernando.crudspring.model.Course;
 import com.fernando.crudspring.repository.CourseRepository;
@@ -18,31 +20,35 @@ import jakarta.validation.constraints.Positive;
 public class CourseService {
 
 	private final CourseRepository courseRepository;
+	private final CourseMapper courseMapper;
 
-	public CourseService (CourseRepository courseRepository) {
+	public CourseService (CourseRepository courseRepository, CourseMapper courseMapper) {
 		this.courseRepository = courseRepository;
+		this.courseMapper = courseMapper;
 	}
 	
-	public List<Course> list() {
-		return this.courseRepository.findAll();
+	public List<CourseDTO> list() {
+		return this.courseMapper.toDTOList(this.courseRepository.findAll());
 	}
 
-	public Course findById(@NotNull @Positive Long id) {
-		return this.courseRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id, "Curso"));
+	public CourseDTO findById(@NotNull @Positive Long id) {
+		return	this.courseRepository.findById(id)
+					.map(courseMapper::toDTO)
+					.orElseThrow(() -> new RecordNotFoundException(id, "Curso"));
 	}
 	
-	public Course store(@Valid Course course) {
-		return this.courseRepository.save(course);
+	public CourseDTO store(@Valid @NotNull CourseDTO course) {
+		return this.courseMapper.toDTO(this.courseRepository.save(this.courseMapper.toEntity(course)));
 	}
 
-	public Course update(@NotNull @Positive Long id, Course course) {
-		Course courseDb = this.findById(id);
-		courseDb.setName(course.getName());
-		courseDb.setCategory(course.getCategory());
-		return this.courseRepository.save(courseDb);
+	public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO course) {
+		Course courseDb = this.courseMapper.toEntity(this.findById(id));
+		courseDb.setName(course.name());
+		courseDb.setCategory(course.category());
+		return this.courseMapper.toDTO(this.courseRepository.save(courseDb));
 	}
 
 	public void destroy(@NotNull @Positive Long id) {
-		this.courseRepository.delete(this.findById(id));
+		this.courseRepository.delete(this.courseMapper.toEntity(this.findById(id)));
 	}
 }
