@@ -19,7 +19,12 @@ public class CourseMapper {
 		if (course == null) {
 			return null;
 		}
-		return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
+		return new CourseDTO(
+			course.getId(),
+			course.getName(),
+			course.getCategory().getValue(),
+			course.getLessons()
+		);
 	}
 	public List<CourseDTO> toDTOList (List<Course> entitiesList) {
 		return entitiesList
@@ -37,6 +42,7 @@ public class CourseMapper {
 		}
 		course.setName(courseDTO.name());
 		course.setCategory(this.categoryConverter.convertToEntityAttribute(courseDTO.category()));
+		course.setLessons(courseDTO.lessons());
 		return course;
 	}
 	public List<Course> toEntityList (List<CourseDTO> DTOList) {
