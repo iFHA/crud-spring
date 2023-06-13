@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.fernando.crudspring.dto.CourseDTO;
+import com.fernando.crudspring.dto.LessonDTO;
 import com.fernando.crudspring.enums.converters.CategoryConverter;
 import com.fernando.crudspring.model.Course;
 
@@ -19,11 +20,16 @@ public class CourseMapper {
 		if (course == null) {
 			return null;
 		}
+		List<LessonDTO> lessonsDTO = course
+										.getLessons()
+										.stream()
+										.map(lesson -> new LessonDTO(lesson.getId(), lesson.getName(), lesson.getYoutubeUrl()))
+										.collect(Collectors.toList());
 		return new CourseDTO(
 			course.getId(),
 			course.getName(),
 			course.getCategory().getValue(),
-			course.getLessons()
+			lessonsDTO
 		);
 	}
 	public List<CourseDTO> toDTOList (List<Course> entitiesList) {
@@ -42,7 +48,7 @@ public class CourseMapper {
 		}
 		course.setName(courseDTO.name());
 		course.setCategory(this.categoryConverter.convertToEntityAttribute(courseDTO.category()));
-		course.setLessons(courseDTO.lessons());
+		course.setLessons(courseDTO.lessons().stream().map(lesson -> lesson.toEntity()).collect(Collectors.toList()));
 		return course;
 	}
 	public List<Course> toEntityList (List<CourseDTO> DTOList) {

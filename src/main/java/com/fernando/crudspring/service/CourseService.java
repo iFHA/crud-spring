@@ -9,6 +9,7 @@ import com.fernando.crudspring.dto.CourseDTO;
 import com.fernando.crudspring.dto.mapper.CourseMapper;
 import com.fernando.crudspring.exception.RecordNotFoundException;
 import com.fernando.crudspring.model.Course;
+import com.fernando.crudspring.model.Lesson;
 import com.fernando.crudspring.repository.CourseRepository;
 
 import jakarta.validation.Valid;
@@ -50,5 +51,10 @@ public class CourseService {
 
 	public void destroy(@NotNull @Positive Long id) {
 		this.courseRepository.delete(this.courseMapper.toEntity(this.findById(id)));
+	}
+
+	public List<Lesson> getAllPostLessons(Long id) {
+		Course course = courseMapper.toEntity(findById(id));
+		return course.getLessons();
 	}
 }

@@ -3,6 +3,7 @@ package com.fernando.crudspring.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fernando.crudspring.dto.CourseDTO;
+import com.fernando.crudspring.model.Lesson;
 import com.fernando.crudspring.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -55,5 +57,9 @@ public class CourseController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void destroy(@PathVariable @Positive Long id) {
 		this.courseService.destroy(id);
+	}
+	@GetMapping("/{id}/lessons")
+	public ResponseEntity<List<Lesson>> getLessons(@PathVariable Long id) {
+		return ResponseEntity.ok(courseService.getAllPostLessons(id));
 	}
 }
