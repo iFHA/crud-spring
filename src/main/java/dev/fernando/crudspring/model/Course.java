@@ -1,5 +1,7 @@
 package dev.fernando.crudspring.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +19,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "courses")
+@SQLRestriction("status = 'ativo'")
+@SQLDelete(sql = "update courses set status = 'inativo' where id = ?")
 public class Course {
 
 	@Id
@@ -34,4 +38,9 @@ public class Course {
 	@Pattern(regexp = "back-end|front-end")
 	@Column(length = 10, nullable = false)
 	private String category;
+
+	@NotBlank
+	@Pattern(regexp = "ativo|inativo")
+	@Column(length = 10, nullable = false)
+	private String status = "ativo";
 }
