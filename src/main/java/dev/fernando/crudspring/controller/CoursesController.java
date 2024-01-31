@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.fernando.crudspring.model.Course;
+import dev.fernando.crudspring.dto.CourseDTO;
 import dev.fernando.crudspring.service.CourseService;
 import lombok.AllArgsConstructor;
 
@@ -27,22 +27,20 @@ public class CoursesController {
 	private final CourseService courseService;
 
 	@GetMapping
-	public ResponseEntity<List<Course>> getCourses() {
+	public ResponseEntity<List<CourseDTO>> getCourses() {
 		return ResponseEntity.ok(this.courseService.getCourses());
 	}
 	@PostMapping
-	public ResponseEntity<Course> newCourse(@RequestBody Course course) {
+	public ResponseEntity<CourseDTO> newCourse(@RequestBody CourseDTO course) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.courseService.newCourse(course));
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<Course> getCourse(@PathVariable Long id) {
+	public ResponseEntity<CourseDTO> getCourse(@PathVariable Long id) {
 		return ResponseEntity.ok(this.courseService.getCourseOrFail(id));
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course course) {
-		var c = this.courseService.getCourseOrFail(id);
-		c.setName(course.getName());
-		c.setCategory(course.getCategory());
+	public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseDTO course) {
+		var c = this.courseService.updateCourse(id, course);
 		return ResponseEntity.ok(c);
 	}
 
