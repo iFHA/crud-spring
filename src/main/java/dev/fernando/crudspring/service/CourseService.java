@@ -31,7 +31,7 @@ public class CourseService {
 
 	public CourseDTO newCourse(@Valid @NotNull CourseDTO course) {
 		var c = mapper.fromDTO(course);
-		c.setStatus("ativo");
+		c.setId(null);
 		return mapper.toDTO(this.courseRepository.save(c));
 	}
 
@@ -39,9 +39,9 @@ public class CourseService {
 		var dto = this.getCourseOrFail(id);
 		var c = mapper.fromDTO(dto);
 		c.setName(course.name());
-		c.setCategory(course.category());
+		c.setCategory(mapper.convertCategoryValue(course.category()));
 		this.courseRepository.save(c);
-		return dto;
+		return mapper.toDTO(c);
 	
 	}
 

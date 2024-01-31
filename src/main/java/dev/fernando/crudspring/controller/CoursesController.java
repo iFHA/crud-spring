@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.fernando.crudspring.dto.CourseDTO;
 import dev.fernando.crudspring.service.CourseService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -31,7 +32,7 @@ public class CoursesController {
 		return ResponseEntity.ok(this.courseService.getCourses());
 	}
 	@PostMapping
-	public ResponseEntity<CourseDTO> newCourse(@RequestBody CourseDTO course) {
+	public ResponseEntity<CourseDTO> newCourse(@RequestBody @Valid CourseDTO course) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.courseService.newCourse(course));
 	}
 	@GetMapping("/{id}")
@@ -39,7 +40,7 @@ public class CoursesController {
 		return ResponseEntity.ok(this.courseService.getCourseOrFail(id));
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseDTO course) {
+	public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseDTO course) {
 		var c = this.courseService.updateCourse(id, course);
 		return ResponseEntity.ok(c);
 	}

@@ -6,14 +6,21 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import dev.fernando.crudspring.enums.CategoryEnum;
+import dev.fernando.crudspring.enums.StatusEnum;
+import dev.fernando.crudspring.enums.converters.CategoryConverter;
+import dev.fernando.crudspring.enums.converters.StatusConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -33,14 +40,12 @@ public class Course {
 	@Column(length = 100, nullable = false)
 	private String name;
 
-	@NotBlank
-	@Length(max = 10)
-	@Pattern(regexp = "back-end|front-end")
+	@NotNull
 	@Column(length = 10, nullable = false)
-	private String category;
+	@Convert(converter = CategoryConverter.class)
+	private CategoryEnum category;
 
-	@NotBlank
-	@Pattern(regexp = "ativo|inativo")
-	@Column(length = 10, nullable = false)
-	private String status = "ativo";
+	@NotNull
+	@Convert(converter = StatusConverter.class)
+	private StatusEnum status = StatusEnum.ATIVO;
 }
