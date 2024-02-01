@@ -26,7 +26,9 @@ public class CrudSpringApplication {
 			c1.setName("Curso 1");
 			c1.setCategory(CategoryEnum.FRONT_END);
 			var l = new Lesson(null, "l1", "Nb4uxLxdvxo", c1);
+			var l4 = new Lesson(null, "l4", "Nb4uxLxdvxo", c1);
 			c1.getLessons().add(l);
+			c1.getLessons().add(l4);
 
 			var c2 = new Course();
 			c2.setName("Curso 2");

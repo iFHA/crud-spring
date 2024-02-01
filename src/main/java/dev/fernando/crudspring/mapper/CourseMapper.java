@@ -15,7 +15,7 @@ public class CourseMapper {
 		if (Objects.isNull(course)) {
 			return null;
 		}
-		return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
+		return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue(), course.getLessons());
 	}
 	public Course fromDTO(CourseDTO dto) {
 		if (Objects.isNull(dto)) {
@@ -25,6 +25,7 @@ public class CourseMapper {
 		c.setId(dto._id());
 		c.setName(dto.name());
 		c.setCategory(convertCategoryValue(dto.category()));
+		c.setLessons(dto.lessons());
 		return c;
 	}
 	public CategoryEnum convertCategoryValue(String category) {
