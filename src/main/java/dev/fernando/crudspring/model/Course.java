@@ -1,5 +1,8 @@
 package dev.fernando.crudspring.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +13,7 @@ import dev.fernando.crudspring.enums.CategoryEnum;
 import dev.fernando.crudspring.enums.StatusEnum;
 import dev.fernando.crudspring.enums.converters.CategoryConverter;
 import dev.fernando.crudspring.enums.converters.StatusConverter;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -18,6 +22,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -48,4 +53,7 @@ public class Course {
 	@NotNull
 	@Convert(converter = StatusConverter.class)
 	private StatusEnum status = StatusEnum.ATIVO;
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Lesson> lessons = new ArrayList<>();
 }
