@@ -39,7 +39,7 @@ public class CourseMapper {
 		c.setCategory(convertCategoryValue(dto.category()));
 		List<Lesson> lessons = dto.lessons()
 						.stream()
-						.map(l->new Lesson(l.id(), l.name(), l.youtubeUrl(), c))
+						.map(l->new Lesson(l._id(), l.name(), l.youtubeUrl(), c))
 						.toList();
 		c.setLessons(lessons);
 		return c;
