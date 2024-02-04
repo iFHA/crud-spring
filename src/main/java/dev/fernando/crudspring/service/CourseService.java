@@ -14,14 +14,17 @@ import dev.fernando.crudspring.repository.CourseRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-
 @Service
 @Validated
-@AllArgsConstructor
 public class CourseService {
+
 	private final CourseRepository courseRepository;
 	private final CourseMapper mapper;
+	
+	public CourseService (final CourseRepository courseRepository, final CourseMapper mapper) {
+		this.courseRepository =courseRepository;
+		this.mapper = mapper;
+	}
 
 	public List<CourseDTO> getCourses() {
 		var courses = this.courseRepository.findAll();

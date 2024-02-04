@@ -17,16 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.fernando.crudspring.dto.CourseDTO;
 import dev.fernando.crudspring.service.CourseService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/courses")
 @CrossOrigin(origins = "http://localhost:4200")
-@AllArgsConstructor
 public class CoursesController {
 
 	private final CourseService courseService;
 
+	public CoursesController(CourseService courseService) {
+		this.courseService = courseService;
+	}
+	
 	@GetMapping
 	public ResponseEntity<List<CourseDTO>> getCourses() {
 		return ResponseEntity.ok(this.courseService.getCourses());
