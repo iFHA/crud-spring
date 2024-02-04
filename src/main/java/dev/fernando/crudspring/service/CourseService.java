@@ -1,6 +1,7 @@
 package dev.fernando.crudspring.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -8,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import dev.fernando.crudspring.dto.CourseDTO;
 import dev.fernando.crudspring.exception.RecordNotFoundException;
 import dev.fernando.crudspring.mapper.CourseMapper;
+import dev.fernando.crudspring.model.Course;
 import dev.fernando.crudspring.repository.CourseRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,22 +37,40 @@ public class CourseService {
 		return mapper.toDTO(this.courseRepository.save(c));
 	}
 
-	public CourseDTO updateCourse(@NotNull @Positive Long id, @Valid @NotNull CourseDTO course) {
-		var dto = this.getCourseOrFail(id);
-		var c = mapper.fromDTO(dto);
-		c.setName(course.name());
-		c.setCategory(mapper.convertCategoryValue(course.category()));
-		this.courseRepository.save(c);
-		return mapper.toDTO(c);
-	
+	public void updateCourse(@NotNull @Positive Long id, @Valid @NotNull CourseDTO courseDTO) {
+		var dbCourse = this.getCourseOrFail(id);
+		var parsedCourse = mapper.fromDTO(courseDTO);
+		dbCourse.setName(parsedCourse.getName());
+		dbCourse.setCategory(parsedCourse.getCategory());
+		dbCourse.getLessons().clear();
+		dbCourse.getLessons().addAll(parsedCourse.getLessons());
+		// mergeLessonsForUpdate(parsedCourse, dbCourse);
+		this.courseRepository.save(dbCourse);
 	}
 
-	public CourseDTO getCourseOrFail(@NotNull @Positive Long id) {
+	private void mergeLessonsForUpdate(Course parsedCourse, Course dbCourse) {
+		dbCourse.getLessons()
+			.removeIf(lesson->!parsedCourse.getLessons().stream().anyMatch(l->lesson.getId().equals(l.getId())));
+		parsedCourse.getLessons().forEach(l->{
+			if(Objects.isNull(l.getId())) {
+				dbCourse.getLessons().add(l);
+			} else {
+				var lesson = dbCourse.getLessons().stream().filter(les->les.getId().equals(l.getId())).findFirst().orElseThrow(()->new RuntimeException("Aula não encontrada!"));
+				lesson.setName(l.getName());
+				lesson.setYoutubeUrl(l.getYoutubeUrl());
+			}
+		});
+	}
+
+	public Course getCourseOrFail(@NotNull @Positive Long id) {
 		var course = this.courseRepository.findById(id);
 		if (course.isEmpty()) {
 			throw new RecordNotFoundException("Curso de id = %d não encontrado".formatted(id));
 		}
-		return mapper.toDTO(course.get());
+		return course.get();
+	}
+	public CourseDTO getCourseDTOOrFail(@NotNull @Positive Long id) {
+		return this.mapper.toDTO(this.getCourseOrFail(id));
 	}
 
 	public void deleteCourse(@NotNull @Positive Long id) {

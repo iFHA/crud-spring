@@ -2,6 +2,7 @@ package dev.fernando.crudspring.mapper;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
@@ -40,8 +41,8 @@ public class CourseMapper {
 		List<Lesson> lessons = dto.lessons()
 						.stream()
 						.map(l->new Lesson(l._id(), l.name(), l.youtubeUrl(), c))
-						.toList();
-		c.setLessons(lessons);
+						.collect(Collectors.toList());
+		c.getLessons().addAll(lessons);
 		return c;
 	}
 	public CategoryEnum convertCategoryValue(String category) {

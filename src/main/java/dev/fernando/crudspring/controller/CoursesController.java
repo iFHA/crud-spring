@@ -37,12 +37,12 @@ public class CoursesController {
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<CourseDTO> getCourse(@PathVariable Long id) {
-		return ResponseEntity.ok(this.courseService.getCourseOrFail(id));
+		return ResponseEntity.ok(this.courseService.getCourseDTOOrFail(id));
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseDTO course) {
-		var c = this.courseService.updateCourse(id, course);
-		return ResponseEntity.ok(c);
+	public ResponseEntity<Void> updateCourse(@PathVariable Long id, @RequestBody @Valid CourseDTO courseDTO) {
+		this.courseService.updateCourse(id, courseDTO);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{id}")

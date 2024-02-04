@@ -25,21 +25,21 @@ public class CrudSpringApplication {
 			var c1 = new Course();
 			c1.setName("Curso 1");
 			c1.setCategory(CategoryEnum.FRONT_END);
-			var l = new Lesson(null, "l1", "Nb4uxLxdvxo", c1);
-			var l4 = new Lesson(null, "l4", "Nb4uxLxdvxo", c1);
+			var l = new Lesson(null, "l111111111", "Nb4uxLxdvxo", c1);
+			var l4 = new Lesson(null, "l444444444", "Nb4uxLxdvxo", c1);
 			c1.getLessons().add(l);
 			c1.getLessons().add(l4);
 
 			var c2 = new Course();
 			c2.setName("Curso 2");
 			c2.setCategory(CategoryEnum.BACK_END);
-			var l2 = new Lesson(null, "l2", "Nb4uxLxdvxo", c2);
+			var l2 = new Lesson(null, "l22222222", "Nb4uxLxdvxo", c2);
 			c2.getLessons().add(l2);
 
 			var c3 = new Course();
 			c3.setName("Curso 3");
 			c3.setCategory(CategoryEnum.FRONT_END);
-			var l3 = new Lesson(null, "l3", "Nb4uxLxdvxo", c3);
+			var l3 = new Lesson(null, "l33333333", "Nb4uxLxdvxo", c3);
 			c3.getLessons().add(l3);
 
 			courseRepository.deleteAll();
