@@ -1,5 +1,7 @@
 package dev.fernando.crudspring.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Lesson {
@@ -18,12 +22,17 @@ public class Lesson {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
+	@Length(min = 5, max = 100)
 	@Column(length = 100, nullable = false)
 	private String name;
 
+	@NotBlank
+	@Length(min = 10, max = 11)
 	@Column(length = 11, nullable = false)
 	private String youtubeUrl;
 	
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
