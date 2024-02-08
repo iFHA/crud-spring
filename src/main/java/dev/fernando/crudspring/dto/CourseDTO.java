@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import dev.fernando.crudspring.enums.CategoryEnum;
+import dev.fernando.crudspring.enums.validation.ValueOfEnum;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 public record CourseDTO(
 	Long _id,
@@ -19,7 +20,7 @@ public record CourseDTO(
 
 	@NotBlank
 	@Length(max = 10)
-	@Pattern(regexp = "back-end|front-end")
+	@ValueOfEnum(enumClass = CategoryEnum.class)
 	String category,
 
 	@NotNull

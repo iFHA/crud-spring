@@ -1,6 +1,8 @@
 package dev.fernando.crudspring.enums;
 
-public enum CategoryEnum {
+import dev.fernando.crudspring.enums.validation.EnumString;
+
+public enum CategoryEnum implements EnumString {
 	FRONT_END("front-end"), BACK_END("back-end");
 	private String value;
 	private CategoryEnum(String value) {
