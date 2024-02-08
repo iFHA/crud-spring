@@ -22,29 +22,33 @@ public class CrudSpringApplication {
 	@Bean
 	CommandLineRunner initDatabase(final CourseRepository courseRepository) {
 		return args -> {
-			var c1 = new Course();
-			c1.setName("Curso 1");
-			c1.setCategory(CategoryEnum.FRONT_END);
-			var l = new Lesson(null, "l111111111", "Nb4uxLxdvxo", c1);
-			var l4 = new Lesson(null, "l444444444", "Nb4uxLxdvxo", c1);
-			c1.getLessons().add(l);
-			c1.getLessons().add(l4);
-
-			var c2 = new Course();
-			c2.setName("Curso 2");
-			c2.setCategory(CategoryEnum.BACK_END);
-			var l2 = new Lesson(null, "l22222222", "Nb4uxLxdvxo", c2);
-			c2.getLessons().add(l2);
-
-			var c3 = new Course();
-			c3.setName("Curso 3");
-			c3.setCategory(CategoryEnum.FRONT_END);
-			var l3 = new Lesson(null, "l33333333", "Nb4uxLxdvxo", c3);
-			c3.getLessons().add(l3);
-
+			
 			courseRepository.deleteAll();
-			// courseRepository.save(c1);
-			courseRepository.saveAll(Arrays.asList(c1,c2,c3));
+			
+			for (int i = 0; i<200; i++) {
+				var c1 = new Course();
+				c1.setName("Curso %d".formatted(i));
+				c1.setCategory(CategoryEnum.FRONT_END);
+				var l = new Lesson(null, "l11111111%d".formatted(i), "%dNb4uxLxdvx".formatted(i).substring(0, 11), c1);
+				var l4 = new Lesson(null, "l44444444%d".formatted(i), "%dNb4uxLxdvx".formatted(i).substring(0, 11), c1);
+				c1.getLessons().add(l);
+				c1.getLessons().add(l4);
+
+				var c2 = new Course();
+				c2.setName("Curso %d".formatted(i));
+				c2.setCategory(CategoryEnum.BACK_END);
+				var l2 = new Lesson(null, "l22222222%d".formatted(i), "Nb4u%dxLxdvxo".formatted(i).substring(0, 11), c2);
+				c2.getLessons().add(l2);
+
+				var c3 = new Course();
+				c3.setName("Curso %d".formatted(i));
+				c3.setCategory(CategoryEnum.FRONT_END);
+				var l3 = new Lesson(null, "l33333333%d".formatted(i), "Nb4ux%dLxdvxo".formatted(i).substring(0, 11), c3);
+				c3.getLessons().add(l3);
+
+				// courseRepository.save(c1);
+				courseRepository.saveAll(Arrays.asList(c1,c2,c3));
+			}
 		};
 	}
 

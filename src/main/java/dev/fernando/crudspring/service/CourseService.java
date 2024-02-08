@@ -2,7 +2,10 @@ package dev.fernando.crudspring.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,10 +13,13 @@ import dev.fernando.crudspring.dto.CourseDTO;
 import dev.fernando.crudspring.exception.RecordNotFoundException;
 import dev.fernando.crudspring.mapper.CourseMapper;
 import dev.fernando.crudspring.model.Course;
+import dev.fernando.crudspring.model.CoursePageDTO;
 import dev.fernando.crudspring.repository.CourseRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 @Service
 @Validated
 public class CourseService {
@@ -26,12 +32,13 @@ public class CourseService {
 		this.mapper = mapper;
 	}
 
-	public List<CourseDTO> getCourses() {
-		var courses = this.courseRepository.findAll();
-		return courses
-			.stream()
-			.map(mapper::toDTO)
-			.toList();
+	public CoursePageDTO getCourses(@PositiveOrZero int pageNumber, @Positive @Max(100) int pageSize) {
+		Page<Course> page = this.courseRepository.findAll(PageRequest.of(pageNumber, pageSize));
+		var courses = page.get()
+						.map(mapper::toDTO)
+						.collect(Collectors.toList());
+		return new CoursePageDTO(courses, page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
+		
 	}
 
 	public CourseDTO newCourse(@Valid @NotNull CourseDTO course) {

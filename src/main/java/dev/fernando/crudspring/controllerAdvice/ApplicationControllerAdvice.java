@@ -3,11 +3,13 @@ package dev.fernando.crudspring.controllerAdvice;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import dev.fernando.crudspring.exception.RecordNotFoundException;
@@ -49,6 +51,26 @@ public class ApplicationControllerAdvice {
 		}
 		
 		String errorMessage = ex.getName() + " deve ser do tipo " + tipo;
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroApi(errorMessage));
+	}
+	@ExceptionHandler(HandlerMethodValidationException.class)
+	public ResponseEntity<ErroApi> handleHandlerMethodValidationException(HandlerMethodValidationException ex) {
+		String errorMessage = ex.getAllValidationResults()
+		.stream()
+		.map(result -> {
+			String parameterName = result.getMethodParameter().getParameterName();
+			String errors = result.getResolvableErrors()
+							.stream()
+							.map(MessageSourceResolvable::getDefaultMessage)
+							.collect(Collectors.joining("\n"));
+			return "O parâmetro \"%s\" %s".formatted(parameterName, errors);
+		})
+		.collect(Collectors.joining("\n"));
+		// String errorMessage = ex.getAllErrors()
+		// .stream()
+		// .map(MessageSourceResolvable::getDefaultMessage)
+		// .collect(Collectors.joining("\n"));
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroApi(errorMessage));
 	}
