@@ -34,20 +34,8 @@ public class CrudSpringApplication {
 				c1.getLessons().add(l);
 				c1.getLessons().add(l4);
 
-				var c2 = new Course();
-				c2.setName("Curso %d".formatted(i));
-				c2.setCategory(CategoryEnum.BACK_END);
-				var l2 = new Lesson(null, "l22222222%d".formatted(i), "Nb4u%dxLxdvxo".formatted(i).substring(0, 11), c2);
-				c2.getLessons().add(l2);
-
-				var c3 = new Course();
-				c3.setName("Curso %d".formatted(i));
-				c3.setCategory(CategoryEnum.FRONT_END);
-				var l3 = new Lesson(null, "l33333333%d".formatted(i), "Nb4ux%dLxdvxo".formatted(i).substring(0, 11), c3);
-				c3.getLessons().add(l3);
-
 				// courseRepository.save(c1);
-				courseRepository.saveAll(Arrays.asList(c1,c2,c3));
+				courseRepository.save(c1);
 			}
 		};
 	}
